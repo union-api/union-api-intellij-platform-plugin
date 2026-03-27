@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# union-api-intellij-platform-plugin Changelog
+# Union API Changelog
 
 ## [Unreleased]
 ### Added
