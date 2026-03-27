@@ -1,8 +1,12 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.fuqiangrepository.unionapiintellijplatformplugin</id>
-    <name>union-api-intellij-platform-plugin</name>
+    <name>Union API</name>
     <vendor>fuqiang-repository</vendor>
+
+    <description><![CDATA[
+        A tool for managing and testing Union API interfaces in IntelliJ IDE.
+    ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
 
