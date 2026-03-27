@@ -13,7 +13,11 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.fuqiangrepository.unionapiintellijplatformplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.fuqiangrepository.unionapiintellijplatformplugin.startup.MyProjectActivity" />
+        <toolWindow
+            factoryClass="com.github.fuqiangrepository.unionapiintellijplatformplugin.toolWindow.ApiToolWindowFactory"
+            id="Union API"
+            anchor="right"/>
+        <projectService
+            serviceImplementation="com.github.fuqiangrepository.unionapiintellijplatformplugin.services.ApiStateService"/>
     </extensions>
 </idea-plugin>
