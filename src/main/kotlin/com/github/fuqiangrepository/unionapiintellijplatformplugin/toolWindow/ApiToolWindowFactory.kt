@@ -18,9 +18,9 @@ class ApiToolWindowFactory : ToolWindowFactory {
             resizeWeight = 0.5
         }
 
-        val mainSplit = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, collectionPanel, rightSplit).apply {
-            dividerLocation = 220
-            resizeWeight = 0.0
+        val mainSplit = JSplitPane(JSplitPane.VERTICAL_SPLIT, collectionPanel, rightSplit).apply {
+            dividerLocation = 200
+            resizeWeight = 0.3
         }
 
         val content = ContentFactory.getInstance().createContent(mainSplit, null, false)

@@ -6,5 +6,7 @@ import com.intellij.util.xmlb.annotations.Tag
 class KeyValueParam {
     var key: String = ""
     var value: String = ""
+    var type: String = ""
+    var description: String = ""
     var enabled: Boolean = true
 }
