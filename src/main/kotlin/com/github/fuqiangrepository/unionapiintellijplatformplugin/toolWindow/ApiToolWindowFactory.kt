@@ -15,12 +15,16 @@ class ApiToolWindowFactory : ToolWindowFactory {
 
         val rightSplit = JSplitPane(JSplitPane.VERTICAL_SPLIT, requestPanel, responsePanel).apply {
             dividerLocation = 300
+            dividerSize = 0
             resizeWeight = 0.5
+            border = null
         }
 
         val mainSplit = JSplitPane(JSplitPane.VERTICAL_SPLIT, collectionPanel, rightSplit).apply {
             dividerLocation = 200
+            dividerSize = 0
             resizeWeight = 0.3
+            border = null
         }
 
         val content = ContentFactory.getInstance().createContent(mainSplit, null, false)

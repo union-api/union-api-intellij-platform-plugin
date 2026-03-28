@@ -17,8 +17,6 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
-import javax.swing.event.TableModelEvent
-import javax.swing.event.TableModelListener
 import java.net.http.HttpClient
 import java.net.http.HttpRequest as JavaHttpRequest
 import java.net.http.HttpResponse
@@ -63,7 +61,7 @@ class RequestPanel(
     private fun kvTableModel() = object : DefaultTableModel(
         arrayOf("", MyBundle.message("param.col.key"), MyBundle.message("param.col.value"),
             MyBundle.message("param.col.type"), MyBundle.message("param.col.description"),
-            MyBundle.message("param.col.action")), 0) {
+            ""), 0) {
         override fun isCellEditable(row: Int, column: Int) = column != 5
         override fun getColumnClass(columnIndex: Int) =
             if (columnIndex == 0) Boolean::class.javaObjectType else String::class.java
@@ -150,10 +148,16 @@ class RequestPanel(
             columnModel.getColumn(0).apply { maxWidth = 30; minWidth = 30 }
             columnModel.getColumn(3).apply { preferredWidth = 80; maxWidth = 120 }
             columnModel.getColumn(5).apply { maxWidth = 30; minWidth = 30
-                cellRenderer = DeleteButtonRenderer()
-                cellEditor   = DeleteButtonEditor(model)
+                cellRenderer = DeleteIconRenderer()
             }
             rowHeight = 26
+            addMouseListener(object : java.awt.event.MouseAdapter() {
+                override fun mouseClicked(e: java.awt.event.MouseEvent) {
+                    val col = columnAtPoint(e.point)
+                    val row = rowAtPoint(e.point)
+                    if (col == 5 && row in 0 until model.rowCount) model.removeRow(row)
+                }
+            })
         }
         val addBtn = JButton("+").apply { addActionListener { model.addRow(arrayOf<Any?>(true, "", "", "", "", "")) } }
         return JPanel(BorderLayout()).apply {
@@ -162,37 +166,11 @@ class RequestPanel(
         }
     }
 
-    private inner class DeleteButtonRenderer : JButton(), TableCellRenderer {
-        init {
-            icon = AllIcons.General.Remove
-            isOpaque = true
-            isBorderPainted = false
-            isContentAreaFilled = false
-            toolTipText = MyBundle.message("param.delete")
-        }
+    private inner class DeleteIconRenderer : JLabel(AllIcons.Actions.GC), TableCellRenderer {
+        init { horizontalAlignment = CENTER; toolTipText = MyBundle.message("param.delete") }
         override fun getTableCellRendererComponent(
             table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int
         ) = this
-    }
-
-    private inner class DeleteButtonEditor(private val model: DefaultTableModel) : AbstractCellEditor(), javax.swing.table.TableCellEditor {
-        private val button = JButton().apply {
-            icon = AllIcons.General.Remove
-            isBorderPainted = false
-            isContentAreaFilled = false
-            toolTipText = MyBundle.message("param.delete")
-        }
-        private var editingRow = -1
-        init {
-            button.addActionListener {
-                if (editingRow in 0 until model.rowCount) model.removeRow(editingRow)
-                fireEditingStopped()
-            }
-        }
-        override fun getTableCellEditorComponent(
-            table: JTable, value: Any?, isSelected: Boolean, row: Int, column: Int
-        ): Component { editingRow = row; return button }
-        override fun getCellEditorValue(): Any = ""
     }
 
     private fun buildBodyPanel(): JPanel {
@@ -244,8 +222,7 @@ class RequestPanel(
         }
     }.toCollection(ArrayList())
 
-    private fun saveToCurrentRequest() {
-        val req = currentRequest ?: return
+    private fun populateRequest(req: ApiRequest) {
         req.method  = methodCombo.selectedItem as String
         req.url     = urlField.text
         req.params  = collectParams(paramsModel)
@@ -260,6 +237,11 @@ class RequestPanel(
         req.body = bodyArea.text
         authPanel.saveAuth(req)
         scriptPanel.saveScripts(req)
+    }
+
+    private fun saveToCurrentRequest() {
+        val req = currentRequest ?: return
+        populateRequest(req)
     }
 
     private fun sendRequest() {
@@ -367,20 +349,7 @@ class RequestPanel(
 
     private fun buildTempRequest(): ApiRequest {
         val req = ApiRequest()
-        req.method  = methodCombo.selectedItem as String
-        req.url     = urlField.text
-        req.params  = collectParams(paramsModel)
-        req.headers = collectParams(headersModel)
-        req.cookies = collectParams(cookiesModel)
-        req.bodyType = when {
-            bodyJson.isSelected -> "json"
-            bodyForm.isSelected -> "form"
-            bodyRaw.isSelected  -> "raw"
-            else                -> "none"
-        }
-        req.body = bodyArea.text
-        authPanel.saveAuth(req)
-        scriptPanel.saveScripts(req)
+        populateRequest(req)
         return req
     }
 
