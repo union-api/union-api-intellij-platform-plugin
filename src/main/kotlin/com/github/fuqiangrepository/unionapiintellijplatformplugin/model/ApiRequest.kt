@@ -13,4 +13,9 @@ class ApiRequest {
     var params: ArrayList<KeyValueParam> = ArrayList()
     var bodyType: String = "none"
     var body: String = ""
+    var cookies: ArrayList<KeyValueParam> = ArrayList()
+    var authType: String = "none"
+    var authData: HashMap<String, String> = HashMap()
+    var preRequestScript: String = ""
+    var postResponseScript: String = ""
 }
