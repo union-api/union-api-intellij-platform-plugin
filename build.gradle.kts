@@ -33,7 +33,7 @@ repositories {
 dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.opentest4j)
-    implementation("org.mozilla:rhino:1.7.15")
+    implementation("org.mozilla:rhino:1.9.1")
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
